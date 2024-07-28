@@ -18,7 +18,7 @@ class Log(LogBase):
         orm_mode = True
 
 class UserBase(BaseModel):
-    email: str
+    username: str
     password: str
 
 class User(UserBase):

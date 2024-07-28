@@ -1,13 +1,17 @@
-from typing import Any
-from fastapi import FastAPI, Depends, HTTPException
+from typing import Annotated, Any
+from fastapi import FastAPI, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from . import models, schemas, crud
+from . import models, schemas, crud, auth
 from .database import SessionLocal, engine
 
 # Create tables in .models
 models.Base.metadata.create_all(bind=engine)
 
+# Create app server
 app = FastAPI()
+
+# Include endpoint routes in auth
+app.include_router(auth.router)
 
 # Dependency
 def get_db():
@@ -17,19 +21,9 @@ def get_db():
     finally:
         db.close()
 
-
-
-@app.get("/")
-async def get_root():
-    return "Testing!!"
-
-# Create user
-@app.post("/users/", response_model=schemas.User)
-def post_user(user: schemas.UserBase, db: Session = Depends(get_db)) -> Any:
-    db_user = crud.read_user_by_email(db, email=user.email)
-    if db_user: # if user already exists
-        raise HTTPException(status_code=400, detail="Email already registered")
-    return crud.create_user(db=db, user=user)
+@app.get("/", status_code=status.HTTP_200_OK)
+async def user(user: Annotated[str, Depends(auth.get_current_user)]):
+    return user
 
 # Get users
 @app.get("/users/", response_model=list[schemas.User])

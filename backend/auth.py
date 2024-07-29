@@ -30,6 +30,11 @@ class Token(BaseModel):
     access_token: str
     token_type: str
 
+class TokenUserData(BaseModel):
+    token: Token
+    username: str
+    id: int
+
 # Dependency
 def get_db():
     db = SessionLocal()
@@ -91,17 +96,17 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)], db: Se
     return user
 
 # Create user
-@router.post("/", response_model=Token)
+@router.post("/", response_model=TokenUserData)
 def post_user(user: schemas.UserBase, db: Session = Depends(get_db)) -> Any:
     check_user = crud.read_user_by_username(db, username=user.username)
     if check_user: # if user already exists
         raise HTTPException(status_code=400, detail="Email already registered")
     new_user = crud.create_user(db=db, user=user)
     access_token=create_access_token(new_user.username, new_user.id)
-    return Token(access_token=access_token, token_type=TOKEN_TYPE)
+    return TokenUserData(username=new_user.username, id=new_user.id, token=Token(access_token=access_token, token_type=TOKEN_TYPE))
 
 # Create token for login
-@router.post("/token", response_model=Token)
+@router.post("/token", response_model=TokenUserData)
 def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)):
     user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
@@ -111,4 +116,4 @@ def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depen
             headers={"WWW-Authenticate": "Bearer"}
         )
     access_token=create_access_token(user.username, user.id)
-    return Token(access_token=access_token, token_type=TOKEN_TYPE)
+    return TokenUserData(username=user.username, id=user.id, token=Token(access_token=access_token, token_type=TOKEN_TYPE))

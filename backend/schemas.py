@@ -1,15 +1,19 @@
 from pydantic import BaseModel
+from datetime import date, time
+from uuid import UUID
+
 
 class LogBase(BaseModel):
     description: str
-    datetime: str
+    log_date: date
+    log_time: time
 
 class Log(LogBase):
     """
     Used for reading/returning from API, since we now know `id` and `author_id`
     """
-    id: int
-    author_id: int
+    id: UUID
+    author_id: UUID
     
     class Config:
         """
@@ -19,13 +23,12 @@ class Log(LogBase):
 
 class UserBase(BaseModel):
     username: str
-    password: str
 
 class User(UserBase):
     """
     Used for reading/returning from API, since we now know `id` and `logs`
     """
-    id: int
+    id: UUID
     logs: list[Log] = []
 
     class Config:
@@ -34,3 +37,6 @@ class User(UserBase):
         """
         orm_mode = True
 
+# Separate password in different class so that when "response_model=schemas.User", password is not included in response to client
+class UserCreate(UserBase):
+    password: str

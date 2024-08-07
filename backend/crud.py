@@ -23,7 +23,7 @@ def create_user(db: Session, user: schemas.UserCreate) -> models.User:
     db.refresh(db_user)
     return db_user
 
-def read_logs(db: Session, author_id: UUID, limit: int = 60):
+def read_logs(db: Session, author_id: UUID, limit: int = 10):
     return db.query(models.Log).filter(models.Log.author_id == author_id).order_by(desc(models.Log.log_date), desc(models.Log.log_time)).limit(limit).all()
 
 def read_logs_by_month(db: Session, year: int, month: int, author_id: UUID):
@@ -49,7 +49,7 @@ def read_logs_by_date_range(db: Session, start_date: date, end_date: date, autho
     ).all()
 
 def create_log(db: Session, log: schemas.LogBase, author: models.User) -> models.Log:
-    db_log = models.Log(description=log.description, log_date=log.log_date, log_time=log.log_time, author_id=author.id)
+    db_log = models.Log(description=log.description, log_date=log.log_date, log_time=log.log_time, duration_minutes=log.duration_minutes, author_id=author.id)
     db.add(db_log)
     db.commit()
     db.refresh(db_log)

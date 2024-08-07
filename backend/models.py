@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from sqlalchemy import Column, String, Date, Time, ForeignKey
+from sqlalchemy import Column, String, Date, Time, ForeignKey,Integer
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
@@ -22,6 +22,7 @@ class Log(Base):
     description = Column(String, nullable=False)
     log_date = Column(Date, default=datetime.now(timezone.utc), nullable=False)
     log_time = Column(Time, default=datetime.now(timezone.utc), nullable=False)
+    duration_minutes = Column(Integer, nullable=False)
     author_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
 
     author = relationship("User", back_populates="logs")

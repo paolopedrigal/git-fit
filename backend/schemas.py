@@ -7,6 +7,7 @@ class LogBase(BaseModel):
     description: str
     log_date: date
     log_time: time
+    duration_minutes: int
 
 class Log(LogBase):
     """

@@ -1,10 +1,12 @@
 import json
 from typing import Annotated, Any
 from fastapi import FastAPI, Depends, Query, status
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from datetime import date
 from . import models, schemas, crud, auth
 from .database import SessionLocal, engine
+from .dotenv import config
 
 # Create tables in .models
 models.Base.metadata.create_all(bind=engine)
@@ -14,6 +16,17 @@ app = FastAPI()
 
 # Include endpoint routes in auth
 app.include_router(auth.router)
+
+# CORS handling
+origins = config.get("CORS_ORIGINS").split(",")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 # Dependency
 def get_db():
@@ -40,7 +53,7 @@ async def create_log(user: Annotated[str, Depends(auth.get_current_user)], log: 
 
 # Get recent logs
 @app.get("/logs/", response_model=list[schemas.Log])
-async def get_recent_logs(user: Annotated[str, Depends(auth.get_current_user)], db: Session = Depends(get_db), limit: int = 60):
+async def get_recent_logs(user: Annotated[str, Depends(auth.get_current_user)], db: Session = Depends(get_db), limit: int = 10):
     return crud.read_logs(db=db, author_id=user.id, limit=limit)
     
 # Get logs by month

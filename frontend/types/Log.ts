@@ -4,4 +4,5 @@ export interface Log {
   id: string;
   log_date: string;
   log_time: string;
+  duration_minutes: number;
 }

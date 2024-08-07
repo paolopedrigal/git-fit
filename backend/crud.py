@@ -54,3 +54,10 @@ def create_log(db: Session, log: schemas.LogBase, author: models.User) -> models
     db.commit()
     db.refresh(db_log)
     return db_log
+
+def delete_logs(db: Session, date: date, author_id: UUID):
+    db_logs = db.query(models.Log).filter(models.Log.log_date == date, models.Log.author_id == author_id).all()
+    for log in db_logs:
+        db.delete(log)
+    db.commit()
+    return db_logs # returns empty list if no logs found at date

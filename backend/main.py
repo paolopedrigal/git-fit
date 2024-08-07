@@ -71,3 +71,8 @@ async def get_logs_by_range(user: Annotated[str, Depends(auth.get_current_user)]
                             end_date: Annotated[date, Query(title="end date of logs")],  
                             db: Session = Depends(get_db)):
     return crud.read_logs_by_date_range(db=db, start_date=start_date, end_date=end_date, author_id=user.id)
+
+# Delete logs at specific date
+@app.delete("/logs/delete", response_model=list[schemas.Log])
+async def delete_logs(user: Annotated[str, Depends(auth.get_current_user)], date: Annotated[date, Query(title="date of logs to delete")], db: Session = Depends(get_db)):
+    return crud.delete_logs(db=db, date=date, author_id=user.id)

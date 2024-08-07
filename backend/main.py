@@ -41,9 +41,14 @@ def get_db():
 async def user(user: Annotated[str, Depends(auth.get_current_user)]):
     return user
 
+# Delete user
+@app.delete("/user/delete/", response_model=schemas.User)
+async def delete_user(user: Annotated[str, Depends(auth.get_current_user)], db: Session = Depends(get_db)):
+    return crud.delete_user(db=db, user_id=user.id)
+
 # Get users
 @app.get("/users/", response_model=list[schemas.User])
-def get_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)) -> Any:
+def get_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return crud.read_users(db, skip=skip, limit=limit)
 
 # Add log 

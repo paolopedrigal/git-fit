@@ -23,10 +23,16 @@ def create_user(db: Session, user: schemas.UserCreate) -> models.User:
     db.refresh(db_user)
     return db_user
 
-def read_logs(db: Session, author_id: UUID, limit: int = 10):
+def delete_user(db: Session, user_id: UUID) -> models.User:
+    db_user = read_user(db=db, user_id=user_id)
+    db.delete(db_user)
+    db.commit()
+    return db_user
+
+def read_logs(db: Session, author_id: UUID, limit: int = 10) -> models.Log:
     return db.query(models.Log).filter(models.Log.author_id == author_id).order_by(desc(models.Log.log_date), desc(models.Log.log_time)).limit(limit).all()
 
-def read_logs_by_month(db: Session, year: int, month: int, author_id: UUID):
+def read_logs_by_month(db: Session, year: int, month: int, author_id: UUID) -> models.Log:
     return db.query(models.Log).filter(
         models.Log.author_id == author_id,
         extract('year', models.Log.log_date) == year,
@@ -36,7 +42,7 @@ def read_logs_by_month(db: Session, year: int, month: int, author_id: UUID):
         desc(models.Log.log_time)
     ).all()
 
-def read_logs_by_date_range(db: Session, start_date: date, end_date: date, author_id: UUID):
+def read_logs_by_date_range(db: Session, start_date: date, end_date: date, author_id: UUID) -> models.Log:
     return db.query(models.Log).filter(
         and_(
             models.Log.log_date >= start_date,
@@ -55,7 +61,7 @@ def create_log(db: Session, log: schemas.LogBase, author: models.User) -> models
     db.refresh(db_log)
     return db_log
 
-def delete_logs(db: Session, date: date, author_id: UUID):
+def delete_logs(db: Session, date: date, author_id: UUID) -> models.Log:
     db_logs = db.query(models.Log).filter(models.Log.log_date == date, models.Log.author_id == author_id).all()
     for log in db_logs:
         db.delete(log)

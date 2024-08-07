@@ -9,6 +9,7 @@ import {
   getCurrentCalendarMonth,
   isValidYYYYMM,
   getMonthStartEndDates,
+  getDurationMinutes,
 } from "@/lib/utils";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import help from "./(commands)/help";
@@ -20,12 +21,13 @@ import { CommandMap } from "@/types/CommandMap";
 import witLogMonth from "./(commands)/wit-log-month";
 import witHelp from "./(commands)/wit-help";
 import witError from "./(commands)/wit-error";
+import witStatus from "./(commands)/wit-status";
 
 export default function Home() {
   const { data: session, status } = useSession();
   const [welcomeMessage, setWelcomeMessage] = useState(welcome);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isWorkingOut, setIsWorkingOut] = useState<boolean>(false);
+  const [startWorkoutTime, setStartWorkoutTime] = useState<number>();
   const welcomeMessageRef = useRef(welcomeMessage);
   const BACKEND_URL = useMemo(
     () => process.env.NEXT_PUBLIC_BACKEND_BASE_URL,
@@ -140,8 +142,9 @@ export default function Home() {
         const a = splitIgnoringQuotes(args);
         /* wit add */
         if (a.length == 1 && a[0] == "add") {
-          if (isWorkingOut) return <span>Workout already in progress</span>;
-          setIsWorkingOut(true);
+          if (startWorkoutTime != undefined)
+            return <span>Workout already in progress</span>;
+          setStartWorkoutTime(new Date().getTime());
           return <span>Workout started</span>;
         } else if (
           /* wit commit -m <message> */
@@ -150,26 +153,29 @@ export default function Home() {
           a[1] == "-m" &&
           isQuotedString(a[2])
         ) {
-          if (!isWorkingOut) return <span>Start workout first</span>;
-          setIsWorkingOut(false);
+          if (startWorkoutTime == undefined)
+            return <span>Start workout first</span>;
+          const endWorkoutTime = new Date().getTime();
+          console.log(
+            "duration:",
+            getDurationMinutes(startWorkoutTime, endWorkoutTime)
+          );
+          setStartWorkoutTime(undefined);
           return <span>Recording workout</span>;
         } else if (
           /* wit status */
           a.length == 1 &&
           a[0] == "status"
         ) {
-          return isWorkingOut ? (
-            <span>Workout in progress</span>
-          ) : (
-            <span>No workout in progress</span>
-          );
+          return witStatus(startWorkoutTime);
         } else if (
           /* wit reset */
           a.length == 1 &&
           a[0] == "reset"
         ) {
-          if (!isWorkingOut) return <span>No workout to forget</span>;
-          setIsWorkingOut(false);
+          if (startWorkoutTime == undefined)
+            return <span>No workout to forget</span>;
+          setStartWorkoutTime(undefined);
           return <span>Forgetting workout</span>;
         } else if (
           /* wit reset --delete <commit> */

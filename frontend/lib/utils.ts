@@ -199,3 +199,29 @@ export function logDateDetails(dateString: string): void {
   console.log("Locale String (en-US):", date.toLocaleDateString("en-US"));
   console.log("UTC Date String:", date.toUTCString());
 }
+
+export function getDurationMinutes(startTime: number, endTime: number): number {
+  return (endTime - startTime) / 60000;
+}
+
+export function getTimeOfDay(milliseconds: number): string {
+  const date = new Date(milliseconds);
+
+  let hours: number = date.getHours();
+  const minutes: number = date.getMinutes();
+  const seconds: number = date.getSeconds();
+  const ampm: string = hours >= 12 ? "PM" : "AM";
+
+  // Convert hours from 24-hour to 12-hour format
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+
+  // Pad minutes and seconds with leading zeros if necessary
+  const padWithZero = (num: number): string => num.toString().padStart(2, "0");
+
+  const timeOfDay: string = `${padWithZero(hours)}:${padWithZero(
+    minutes
+  )}:${padWithZero(seconds)} ${ampm}`;
+
+  return timeOfDay;
+}

@@ -54,8 +54,8 @@ export function formatGitTime(timeString: string): string {
 
 // Don't use UTC time since getting current (local time) calendar week
 export function getCurrentCalendarWeek(): {
-  startWeek: string;
-  endWeek: string;
+  startWeekDate: string;
+  endWeekDate: string;
 } {
   const now = new Date();
   const dayOfWeek = now.getDay(); // 0 (Sunday) to 6 (Saturday)
@@ -76,15 +76,15 @@ export function getCurrentCalendarWeek(): {
   };
 
   return {
-    startWeek: formatDate(startOfWeek),
-    endWeek: formatDate(endOfWeek),
+    startWeekDate: formatDate(startOfWeek),
+    endWeekDate: formatDate(endOfWeek),
   };
 }
 
 // Don't use UTC time since getting current (local time) calendar month
 export function getCurrentCalendarMonth(): {
-  startMonth: string;
-  endMonth: string;
+  startMonthDate: string;
+  endMonthDate: string;
 } {
   const now = new Date();
 
@@ -102,8 +102,8 @@ export function getCurrentCalendarMonth(): {
   };
 
   return {
-    startMonth: formatDate(startOfMonth),
-    endMonth: formatDate(endOfMonth),
+    startMonthDate: formatDate(startOfMonth),
+    endMonthDate: formatDate(endOfMonth),
   };
 }
 
@@ -157,6 +157,37 @@ export function formatMonthYear(dateString: string) {
 
   // Return the formatted string
   return `${month} ${year}`;
+}
+
+export function isValidYYYYMM(dateString: string): boolean {
+  // Regular expression to match the YYYY-MM format
+  const regex = /^\d{4}-(0[1-9]|1[0-2])$/;
+  return regex.test(dateString);
+}
+
+export function getMonthStartEndDates(yyyyMmString: string): {
+  startDate: string;
+  endDate: string;
+} {
+  if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(yyyyMmString)) {
+    throw new Error("Invalid YYYY-MM format");
+  }
+
+  const [year, month] = yyyyMmString.split("-").map(Number);
+  const startDate = new Date(Date.UTC(year, month - 1, 1));
+  const endDate = new Date(Date.UTC(year, month, 0));
+
+  const formatDate = (date: Date): string => {
+    const year = date.getUTCFullYear();
+    const month = (date.getUTCMonth() + 1).toString().padStart(2, "0");
+    const day = date.getUTCDate().toString().padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  return {
+    startDate: formatDate(startDate),
+    endDate: formatDate(endDate),
+  };
 }
 
 export function logDateDetails(dateString: string): void {

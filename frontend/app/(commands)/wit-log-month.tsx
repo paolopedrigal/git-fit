@@ -15,21 +15,26 @@ enum DayOfWeek {
 
 const witLogMonth = (
   logs: Log[],
-  startMonth: string,
-  endMonth: string,
-  isCurrentMonth: boolean = true
+  startMonthDate: string,
+  endMonthDate: string
 ) => {
   groupLogsByDate(logs);
 
   const today = new Date();
-  const startOfMonth = new Date(startMonth);
-  const endOfMonth = new Date(endMonth);
+  const startOfMonth = new Date(startMonthDate);
+  const endOfMonth = new Date(endMonthDate);
   const daysInMonth = endOfMonth.getUTCDate();
 
   const daysOfMonth: Box[] = new Array(daysInMonth)
-    .fill(0)
+    .fill("⬛")
     .map((_, index) =>
-      isCurrentMonth ? (index >= today.getDate() - 1 ? "⬜" : "⬛") : "⬛"
+      today >= startOfMonth && today <= endOfMonth
+        ? index >= today.getDate() - 1
+          ? "⬜"
+          : "⬛"
+        : today < startOfMonth
+        ? "⬜"
+        : "⬛"
     );
 
   for (let i = 0; i < logs.length; i++) {
@@ -64,7 +69,7 @@ const witLogMonth = (
           marginLeft: "100px",
         }}
       >
-        {formatMonthYear(startMonth)}
+        {formatMonthYear(startMonthDate)}
       </span>
       <pre>
         {/* Day of the Week Labels */}

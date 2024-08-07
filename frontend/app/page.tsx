@@ -7,7 +7,8 @@ import {
   splitIgnoringQuotes,
   getCurrentCalendarWeek,
   getCurrentCalendarMonth,
-  logDateDetails,
+  isValidYYYYMM,
+  getMonthStartEndDates,
 } from "@/lib/utils";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import help from "./(commands)/help";
@@ -15,21 +16,29 @@ import witLog from "./(commands)/wit-log";
 import witLogOneline from "./(commands)/wit-log-oneline";
 import witLogWeek from "./(commands)/wit-log-week";
 import welcome from "./(commands)/welcome";
-import { renderToString } from "react-dom/server";
 import { CommandMap } from "@/types/CommandMap";
 import witLogMonth from "./(commands)/wit-log-month";
+import witHelp from "./(commands)/wit-help";
+import witError from "./(commands)/wit-error";
 
 export default function Home() {
   const { data: session, status } = useSession();
   const [welcomeMessage, setWelcomeMessage] = useState(welcome);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isWorkingOut, setIsWorkingOut] = useState<boolean>(false);
   const welcomeMessageRef = useRef(welcomeMessage);
   const BACKEND_URL = useMemo(
     () => process.env.NEXT_PUBLIC_BACKEND_BASE_URL,
     []
   );
-  const { startWeek, endWeek } = useMemo(() => getCurrentCalendarWeek(), []);
-  const { startMonth, endMonth } = useMemo(() => getCurrentCalendarMonth(), []);
+  const { startWeekDate, endWeekDate } = useMemo(
+    () => getCurrentCalendarWeek(),
+    []
+  );
+  const { startMonthDate, endMonthDate } = useMemo(
+    () => getCurrentCalendarMonth(),
+    []
+  );
 
   const logsCallback = useCallback(
     async (accessToken: string) => {
@@ -90,8 +99,8 @@ export default function Home() {
       if (session) {
         const logs = await logsCallbackRange(
           session.user.access_token,
-          startWeek,
-          endWeek
+          startWeekDate,
+          endWeekDate
         );
         return logs;
       }
@@ -102,7 +111,7 @@ export default function Home() {
         setWelcomeMessage(
           <div>
             {welcome}
-            {witLogWeek(logs, startWeek, endWeek)}
+            {witLogWeek(logs, startWeekDate, endWeekDate)}
             <br />
             <br />
             <span>
@@ -127,101 +136,132 @@ export default function Home() {
     const commands: CommandMap = {
       help: help,
 
-      // prettier-ignore
-      wit: 
-      async (args) => {
+      wit: async (args) => {
         const a = splitIgnoringQuotes(args);
-        if (
-          (a.length == 1 &&
-          a[0] == "add") || (a.length == 2 && a[0] == "add" && a[1] == "-A")
-        ) {
-            return <span>Adding today's workout</span>;
+        /* wit add */
+        if (a.length == 1 && a[0] == "add") {
+          if (isWorkingOut) return <span>Workout already in progress</span>;
+          setIsWorkingOut(true);
+          return <span>Workout started</span>;
         } else if (
+          /* wit commit -m <message> */
           a[0] == "commit" &&
           a.length == 3 &&
           a[1] == "-m" &&
           isQuotedString(a[2])
         ) {
-          return <span>Committing today's workout</span>;
+          if (!isWorkingOut) return <span>Start workout first</span>;
+          setIsWorkingOut(false);
+          return <span>Recording workout</span>;
+        } else if (
+          /* wit status */
+          a.length == 1 &&
+          a[0] == "status"
+        ) {
+          return isWorkingOut ? (
+            <span>Workout in progress</span>
+          ) : (
+            <span>No workout in progress</span>
+          );
+        } else if (
+          /* wit reset */
+          a.length == 1 &&
+          a[0] == "reset"
+        ) {
+          if (!isWorkingOut) return <span>No workout to forget</span>;
+          setIsWorkingOut(false);
+          return <span>Forgetting workout</span>;
+        } else if (
+          /* wit reset --delete <commit> */
+          a.length == 3 &&
+          a[0] == "reset" &&
+          a[1] == "--delete"
+        ) {
+          return <span>Deleting workout</span>;
         } else if (a.length == 1 && a[0] == "log") {
+          /* wit log */
           const logs = await logsCallback(session.user.access_token);
           return witLog(logs, session.user.username);
-        } else if (a.length == 2 && a[0] == "log" && (a[1] == "--oneline" || a[1] == "--week" || a[1] == "--month")) {
+        } else if (
+          /* wit log --oneline | --week | --month */
+          a.length == 2 &&
+          a[0] == "log" &&
+          (a[1] == "--oneline" || a[1] == "--week" || a[1] == "--month")
+        ) {
           if (a[1] == "--oneline") {
             const logs = await logsCallback(session.user.access_token);
             return witLogOneline(logs);
           } else if (a[1] == "--week") {
-            const logs = await logsCallbackRange(session.user.access_token, startWeek, endWeek)
-            return witLogWeek(logs, startWeek, endWeek)
+            const logs = await logsCallbackRange(
+              session.user.access_token,
+              startWeekDate,
+              endWeekDate
+            );
+            return witLogWeek(logs, startWeekDate, endWeekDate);
           } else {
-            const logs = await logsCallbackRange(session.user.access_token, startMonth, endMonth)
-            return witLogMonth(logs, startMonth, endMonth);
+            const logs = await logsCallbackRange(
+              session.user.access_token,
+              startMonthDate,
+              endMonthDate
+            );
+            return witLogMonth(logs, startMonthDate, endMonthDate);
           }
-          
+        } else if (
+          /* wit log --year-month YYYY-MM */
+          a.length == 3 &&
+          a[0] == "log" &&
+          a[1] == "--year-month" &&
+          isValidYYYYMM(a[2])
+        ) {
+          const { startDate, endDate } = getMonthStartEndDates(a[2]);
+          const logs = await logsCallbackRange(
+            session.user.access_token,
+            startDate,
+            endDate
+          );
+          return witLog(logs);
+        } else if (
+          /* wit log (--oneline | --month) --year-month YYYY-MM */
+          a.length == 4 &&
+          a[0] == "log" &&
+          (a[1] == "--oneline" || a[1] == "--month") &&
+          a[2] == "--year-month" &&
+          isValidYYYYMM(a[3])
+        ) {
+          const { startDate, endDate } = getMonthStartEndDates(a[3]);
+          const logs = await logsCallbackRange(
+            session.user.access_token,
+            startDate,
+            endDate
+          );
+          if (a[1] == "--oneline") {
+            return witLogOneline(logs);
+          } else {
+            return witLogMonth(logs, startDate, endDate);
+          }
+        } else if (
+          /* wit log --year-month YYYY-MM (--oneline | --month) */
+          a.length == 4 &&
+          a[0] == "log" &&
+          a[1] == "--year-month" &&
+          isValidYYYYMM(a[2]) &&
+          (a[3] == "--oneline" || a[3] == "--month")
+        ) {
+          const { startDate, endDate } = getMonthStartEndDates(a[2]);
+          const logs = await logsCallbackRange(
+            session.user.access_token,
+            startDate,
+            endDate
+          );
+          if (a[3] == "--oneline") {
+            return witLogOneline(logs);
+          } else {
+            return witLogMonth(logs, startDate, endDate);
+          }
         } else if (a.length == 0 || (a.length == 1 && a[0] == "--help")) {
-          return (
-            <span>
-              <pre>
-                usage: wit {"[<"}command{">]"} {"[<"}options{">]"}
-                <br />
-              </pre>
-              <br />
-              <span>
-                Commands:
-                <br />
-                <pre style={{ marginLeft: "20px" }}>
-                  add .                   Track current day's workout
-                </pre>
-                <pre style={{ marginLeft: "20px" }}>
-                  commit -m {"<"}message{">"}     Record workouts to repository
-                </pre>
-              </span>
-              <br />
-              <span>
-                Options:
-                <br />
-                <pre style={{ marginLeft: "20px" }}>
-                  --help Show this help message and exit
-                </pre>
-              </span>
-              <br />
-              <span>
-                Examples:
-                <br />
-                <pre style={{ marginLeft: "20px" }}>
-                  wit commit -m "push: 55lbs DB bench press"
-                </pre>
-                <pre style={{ marginLeft: "20px" }}>
-                  wit commit -m "legs: 135lbs squat"
-                </pre>
-              </span>
-            </span>
-          );
+          return witHelp;
         } else {
-          return (
-            <span>
-              <span>
-                Invalid command or options. Use the following usage guidelines:
-                <br />
-              </span>
-              <br/>
-              <span style={{ marginLeft: "20px" }}>
-                wit add {"["}-A{"]"}<br />
-              </span>
-              <span style={{ marginLeft: "20px" }}>
-                wit commit -m {"<"}message{">"}
-                <br />
-              </span>
-              <span style={{ marginLeft: "20px" }}>
-                wit log {"["}--oneline | --week | --month | --month-year {"<"}month year{">]"}
-                <br />
-              </span>
-              <br />
-              <span>
-                Enter "wit --help" for more information.
-              </span>
-            </span>
-          );
+          return witError;
         }
       },
 

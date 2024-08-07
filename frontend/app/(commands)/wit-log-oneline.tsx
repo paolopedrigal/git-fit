@@ -1,18 +1,24 @@
 import { Log } from "@/types/Log";
 
-// prettier-ignore
 const witLogOneline = (logs: Log[]) => {
+  if (logs.length == 0) {
+    return <span>No logs found</span>;
+  }
+
   return (
-    <span>
-      {logs.map((log) => (
-        <div key={log.id}>
-          <span style={{ color: "mediumpurple" }}>{log.id.slice(log.id.length-7, log.id.length)}</span>
-          <span style={{ marginLeft: "20px", color: "beige" }}>{log.description}</span>
-          <br/>
-        </div>
+    <>
+      {logs.map((log: Log, index) => (
+        <span key={log.id}>
+          <span style={{ color: "mediumpurple" }}>
+            {log.id.slice(log.id.length - 7, log.id.length)}
+          </span>
+          <span style={{ marginLeft: "20px", color: "beige" }}>
+            {log.description}
+          </span>
+          {index == logs.length - 1 ? <></> : <br />}
+        </span>
       ))}
-      <span>:</span>
-    </span>
+    </>
   );
 };
 

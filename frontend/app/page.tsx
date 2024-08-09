@@ -10,6 +10,10 @@ import {
   isValidYYYYMM,
   getMonthStartEndDates,
   getDurationMinutes,
+  getCurrentDate,
+  getCurrentTime,
+  removeAllQuotes,
+  isValidYYYYMMDD,
 } from "@/lib/utils";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import help from "./(commands)/help";
@@ -22,17 +26,15 @@ import witLogMonth from "./(commands)/wit-log-month";
 import witHelp from "./(commands)/wit-help";
 import witError from "./(commands)/wit-error";
 import witStatus from "./(commands)/wit-status";
+import { Log, LogBase } from "@/types/Log";
 
 export default function Home() {
   const { data: session, status } = useSession();
   const [welcomeMessage, setWelcomeMessage] = useState(welcome);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [startWorkoutTime, setStartWorkoutTime] = useState<number>();
+  const startWorkoutTimeRef = useRef(startWorkoutTime);
   const welcomeMessageRef = useRef(welcomeMessage);
-  const BACKEND_URL = useMemo(
-    () => process.env.NEXT_PUBLIC_BACKEND_BASE_URL,
-    []
-  );
   const { startWeekDate, endWeekDate } = useMemo(
     () => getCurrentCalendarWeek(),
     []
@@ -42,29 +44,23 @@ export default function Home() {
     []
   );
 
+  // API route: /api/logs/ handles error handling
   const logsCallback = useCallback(
     async (accessToken: string) => {
-      const response = await fetch(BACKEND_URL + "/logs/", {
+      const response = await fetch("/api/logs/", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`, // Include the token here
         },
       });
-
-      if (response.ok) {
-        const results = await response.json();
-        return results;
-      } else {
-        console.error(
-          "Could not GET response at location:",
-          BACKEND_URL + "/logs/"
-        );
-      }
+      const results: { data: Log[] } = await response.json();
+      return results.data;
     },
     [session]
   );
 
+  // API route: /api/logs/range/ handles error handling
   const logsCallbackRange = useCallback(
     async (accessToken: string, startDate: string, endDate: string) => {
       const params = new URLSearchParams({
@@ -73,7 +69,7 @@ export default function Home() {
       });
 
       const response = await fetch(
-        BACKEND_URL + "/logs/range/" + `?${params.toString()}`,
+        "/api/logs/range/" + `?${params.toString()}`,
         {
           method: "GET",
           headers: {
@@ -83,15 +79,55 @@ export default function Home() {
         }
       );
 
-      if (response.ok) {
-        const results = await response.json();
-        return results;
-      } else {
-        console.error(
-          "Could not GET response at location:",
-          BACKEND_URL + "/logs/range/"
-        );
-      }
+      const results: { data: Log[] } = await response.json();
+      return results.data;
+    },
+    [session]
+  );
+
+  // API route: /api/log/ handles error handling
+  const postLogCallback = useCallback(
+    async (accessToken: string, description: string, duration: number) => {
+      const logData: LogBase = {
+        description: description,
+        log_date: getCurrentDate(),
+        log_time: getCurrentTime(),
+        duration_minutes: duration,
+      };
+      const response = await fetch("/api/log/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(logData),
+      });
+      const results: { data: Log[] } = await response.json();
+      return results.data;
+    },
+    [session]
+  );
+
+  // API route: /api/log/ handles error handling
+  const deleteLogsCallback = useCallback(
+    async (accessToken: string, date: string) => {
+      const params = new URLSearchParams({
+        date: date,
+      });
+
+      const response = await fetch(
+        "/api/logs/delete/" + `?${params.toString()}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`, // Include the token here
+          },
+        }
+      );
+
+      const results: { data: Log[] } = await response.json();
+      return results.data;
     },
     [session]
   );
@@ -106,6 +142,7 @@ export default function Home() {
         );
         return logs;
       }
+      return [];
     };
 
     if (session && status == "authenticated") {
@@ -156,12 +193,17 @@ export default function Home() {
           if (startWorkoutTime == undefined)
             return <span>Start workout first</span>;
           const endWorkoutTime = new Date().getTime();
-          console.log(
-            "duration:",
+          const postedLog = await postLogCallback(
+            session.user.access_token,
+            removeAllQuotes(a[2]),
             getDurationMinutes(startWorkoutTime, endWorkoutTime)
           );
-          setStartWorkoutTime(undefined);
-          return <span>Recording workout</span>;
+          if (postedLog) {
+            setStartWorkoutTime(undefined);
+            return <span>Recording workout</span>;
+          } else {
+            return <span>Unable to record workout</span>;
+          }
         } else if (
           /* wit status */
           a.length == 1 &&
@@ -178,12 +220,18 @@ export default function Home() {
           setStartWorkoutTime(undefined);
           return <span>Forgetting workout</span>;
         } else if (
-          /* wit reset --delete <commit> */
+          /* wit reset --delete <YYYY-MM-DD> */
           a.length == 3 &&
           a[0] == "reset" &&
-          a[1] == "--delete"
+          a[1] == "--delete" &&
+          isValidYYYYMMDD(a[2])
         ) {
-          return <span>Deleting workout</span>;
+          const logs = await deleteLogsCallback(
+            session.user.access_token,
+            a[2]
+          );
+          if (logs.length == 0) return <span>No workout logs to delete</span>;
+          return <span>Deleting workout log(s)</span>;
         } else if (a.length == 1 && a[0] == "log") {
           /* wit log */
           const logs = await logsCallback(session.user.access_token);

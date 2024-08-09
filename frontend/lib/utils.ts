@@ -165,6 +165,12 @@ export function isValidYYYYMM(dateString: string): boolean {
   return regex.test(dateString);
 }
 
+export function isValidYYYYMMDD(dateString: string): boolean {
+  // Regular expression to match the YYYY-MM-DD format
+  const regex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
+  return regex.test(dateString);
+}
+
 export function getMonthStartEndDates(yyyyMmString: string): {
   startDate: string;
   endDate: string;
@@ -201,7 +207,7 @@ export function logDateDetails(dateString: string): void {
 }
 
 export function getDurationMinutes(startTime: number, endTime: number): number {
-  return (endTime - startTime) / 60000;
+  return Math.round((endTime - startTime) / 60000);
 }
 
 export function getTimeOfDay(milliseconds: number): string {
@@ -224,4 +230,32 @@ export function getTimeOfDay(milliseconds: number): string {
   )}:${padWithZero(seconds)} ${ampm}`;
 
   return timeOfDay;
+}
+
+export function getCurrentDate(): string {
+  const date = new Date();
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed, so add 1
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+export function getCurrentTime(): string {
+  const date = new Date();
+
+  // Format the time to "HH:MM:SS" for consistency with Python's datetime.time
+  const timeString = date.toLocaleTimeString("en-US", {
+    hour12: false,
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  });
+
+  return timeString; // This returns "HH:MM:SS"
+}
+
+export function removeAllQuotes(input: string): string {
+  return input.replace(/['"]/g, "");
 }

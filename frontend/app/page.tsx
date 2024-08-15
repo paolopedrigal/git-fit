@@ -1,7 +1,6 @@
 "use client";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import ReactTerminalClient from "@/components/react-terminal-client";
-import { SignInUp } from "@/components/sign-in-up";
 import {
   isQuotedString,
   splitIgnoringQuotes,
@@ -27,13 +26,14 @@ import witHelp from "./(commands)/wit-help";
 import witError from "./(commands)/wit-error";
 import witStatus from "./(commands)/wit-status";
 import { Log, LogBase } from "@/types/Log";
+import { redirect } from "next/navigation";
 
 export default function Home() {
   const { data: session, status } = useSession();
   const [welcomeMessage, setWelcomeMessage] = useState(welcome);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isWelcomeMessageReady, setIsWelcomMessageReady] =
+    useState<boolean>(false);
   const [startWorkoutTime, setStartWorkoutTime] = useState<number>();
-  const startWorkoutTimeRef = useRef(startWorkoutTime);
   const welcomeMessageRef = useRef(welcomeMessage);
   const { startWeekDate, endWeekDate } = useMemo(
     () => getCurrentCalendarWeek(),
@@ -160,7 +160,7 @@ export default function Home() {
             <br />
           </div>
         );
-        setIsLoading(false);
+        setIsWelcomMessageReady(true);
       });
     }
   }, [session, status]);
@@ -171,7 +171,7 @@ export default function Home() {
 
   console.log("status:", status);
 
-  if (status == "authenticated" && !isLoading) {
+  if (status == "authenticated" && isWelcomeMessageReady) {
     const commands: CommandMap = {
       help: help,
 
@@ -338,12 +338,9 @@ export default function Home() {
         />
       </main>
     );
-  } else
-    return (
-      <main>
-        <p>No session currently</p>
-        <a onClick={() => signIn()}>Sign in</a>
-        <SignInUp />
-      </main>
-    );
+  } else if (status == "unauthenticated") {
+    redirect("/credentials/sign-in/");
+  } else {
+    return <span>Loading</span>;
+  }
 }

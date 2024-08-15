@@ -32,16 +32,17 @@ export async function POST(req: NextRequest) {
       const data = await response.json();
       return NextResponse.json({ data });
     } else {
-      return NextResponse.json(
-        { error: "Failed to create log" },
-        { status: response.status }
-      );
+      return NextResponse.json({
+        error: "Failed to create log",
+        status: response.status,
+      });
     }
   } catch (error: any) {
     console.error("Error in POST /logs:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error", message: error.message },
-      { status: 500 }
-    );
+    return NextResponse.json({
+      error: "Internal Server Error",
+      message: error.message,
+      status: 500,
+    });
   }
 }

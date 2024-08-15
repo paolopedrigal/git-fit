@@ -8,10 +8,7 @@ export async function GET(req: NextRequest) {
 
   // Validate the parameters
   if (!startDate || !endDate || !authHeader) {
-    return NextResponse.json(
-      { error: "Missing required fields" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "Missing required fields", status: 400 });
   }
 
   const accessToken = authHeader.split(" ")[1]; // Extract the Bearer token

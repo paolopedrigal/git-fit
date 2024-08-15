@@ -10,10 +10,10 @@ export async function POST(req: NextRequest) {
 
     // Perform any necessary validation
     if (!body || !authHeader) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
+      return NextResponse.json({
+        error: "Missing required fields",
+        status: 400,
+      });
     }
 
     const accessToken = authHeader.split(" ")[1]; // Extract the Bearer token

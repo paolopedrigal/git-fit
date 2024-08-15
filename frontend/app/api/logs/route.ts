@@ -5,7 +5,7 @@ export async function GET(req: NextRequest) {
     const authHeader = req.headers.get("Authorization"); // Note: headers are case-insensitive
 
     if (!authHeader) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized", status: 401 });
     }
 
     const accessToken = authHeader.split(" ")[1]; // Extract the Bearer token

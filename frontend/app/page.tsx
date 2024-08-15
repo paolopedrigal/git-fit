@@ -153,11 +153,6 @@ export default function Home() {
             {witLogWeek(logs, startWeekDate, endWeekDate)}
             <br />
             <br />
-            <span>
-              Type <strong>help</strong> to see available commands.
-            </span>
-            <br />
-            <br />
           </div>
         );
         setIsWelcomMessageReady(true);

@@ -12,6 +12,11 @@ const welcome = (
         =======================
         </pre>
         <br />
+        <span>
+          Type <strong>help</strong> to see available commands.
+        </span>
+        <br />
+        <br />
       </div>
 )
 

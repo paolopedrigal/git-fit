@@ -131,6 +131,20 @@ export default function Home() {
     []
   );
 
+  // API route
+  const deleteUserCallback = useCallback(async (accessToken: string) => {
+    const response = await fetch("/api/user/delete", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`, // Include the token here
+      },
+    });
+    const results: { success: boolean } = await response.json();
+    if (results.success === true) return true;
+    else return false;
+  }, []);
+
   useEffect(() => {
     const getCurrentWeekLogs = async () => {
       if (session) {
@@ -164,6 +178,7 @@ export default function Home() {
   }, [welcomeMessage]);
 
   console.log("status:", status);
+  console.log("session:", session);
 
   if (status == "authenticated" && isWelcomeMessageReady) {
     const commands: CommandMap = {
@@ -314,7 +329,6 @@ export default function Home() {
       },
 
       exit: () => {
-        console.log("Signing out...");
         signOut();
         return <span>Signing out...</span>;
       },
@@ -337,8 +351,11 @@ export default function Home() {
             "This action cannot be undone. This will permanently delete your account and remove your data from our servers."
           }
           actionDescription={"Yes, delete my account"}
-          actionCallback={() => {
-            console.log("deleteing account");
+          actionCallback={async () => {
+            const isUserDeleted = await deleteUserCallback(
+              session.user.access_token
+            );
+            if (isUserDeleted) signOut();
           }}
           isDestructive
         />

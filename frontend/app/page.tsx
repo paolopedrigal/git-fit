@@ -27,10 +27,12 @@ import witError from "./(commands)/wit-error";
 import witStatus from "./(commands)/wit-status";
 import { Log, LogBase } from "@/types/Log";
 import { redirect } from "next/navigation";
+import { Dialog } from "@/components/dialog";
 
 export default function Home() {
   const { data: session, status } = useSession();
   const [welcomeMessage, setWelcomeMessage] = useState(welcome);
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [isWelcomeMessageReady, setIsWelcomMessageReady] =
     useState<boolean>(false);
   const [startWorkoutTime, setStartWorkoutTime] = useState<number>();
@@ -45,20 +47,17 @@ export default function Home() {
   );
 
   // API route: /api/logs/ handles error handling
-  const logsCallback = useCallback(
-    async (accessToken: string) => {
-      const response = await fetch("/api/logs/", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`, // Include the token here
-        },
-      });
-      const results: { data: Log[] } = await response.json();
-      return results.data;
-    },
-    [session]
-  );
+  const logsCallback = useCallback(async (accessToken: string) => {
+    const response = await fetch("/api/logs/", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`, // Include the token here
+      },
+    });
+    const results: { data: Log[] } = await response.json();
+    return results.data;
+  }, []);
 
   // API route: /api/logs/range/ handles error handling
   const logsCallbackRange = useCallback(
@@ -82,7 +81,7 @@ export default function Home() {
       const results: { data: Log[] } = await response.json();
       return results.data;
     },
-    [session]
+    []
   );
 
   // API route: /api/log/ handles error handling
@@ -105,7 +104,7 @@ export default function Home() {
       const results: { data: Log[] } = await response.json();
       return results.data;
     },
-    [session]
+    []
   );
 
   // API route: /api/log/ handles error handling
@@ -129,7 +128,7 @@ export default function Home() {
       const results: { data: Log[] } = await response.json();
       return results.data;
     },
-    [session]
+    []
   );
 
   useEffect(() => {
@@ -314,10 +313,15 @@ export default function Home() {
         }
       },
 
-      signout: () => {
+      exit: () => {
         console.log("Signing out...");
         signOut();
         return <span>Signing out...</span>;
+      },
+
+      "delete-account": () => {
+        setIsDialogOpen(true);
+        return <span>Delete your account?</span>;
       },
     };
 
@@ -325,6 +329,19 @@ export default function Home() {
 
     return (
       <main>
+        <Dialog
+          openState={isDialogOpen}
+          openStateCallback={setIsDialogOpen}
+          title={"Are you absolutely sure?"}
+          description={
+            "This action cannot be undone. This will permanently delete your account and remove your data from our servers."
+          }
+          actionDescription={"Yes, delete my account"}
+          actionCallback={() => {
+            console.log("deleteing account");
+          }}
+          isDestructive
+        />
         <ReactTerminalClient
           prompt={prompt}
           commands={commands}

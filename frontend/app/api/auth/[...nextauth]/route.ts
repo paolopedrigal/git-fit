@@ -27,11 +27,11 @@ const handler = NextAuth({
         const user: User = await res.json();
         if (res.ok) {
           // If status code 200 returned
-          console.log("Response OK:", user);
+          // console.log("Response OK:", user);
           return user;
         } else {
           // If you return null then an error will be displayed advising the user to check their details.
-          console.log("Response NOT OK:", user);
+          // console.log("Response NOT OK:", user);
           return {
             access_token: "",
             token_type: "error",

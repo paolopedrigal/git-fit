@@ -28,6 +28,7 @@ import witStatus from "./(commands)/wit-status";
 import { Log, LogBase } from "@/types/Log";
 import { redirect } from "next/navigation";
 import { Dialog } from "@/components/dialog";
+import DumbbellAnimation from "@/components/dumbbell-animation";
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -176,9 +177,6 @@ export default function Home() {
   useEffect(() => {
     welcomeMessageRef.current = welcomeMessage;
   }, [welcomeMessage]);
-
-  console.log("status:", status);
-  console.log("session:", session);
 
   if (status == "authenticated" && isWelcomeMessageReady) {
     const commands: CommandMap = {
@@ -371,6 +369,10 @@ export default function Home() {
   } else if (status == "unauthenticated") {
     redirect("/credentials/sign-in/");
   } else {
-    return <span>Loading</span>;
+    return (
+      <main className="flex justify-center items-center h-screen w-screen">
+        <DumbbellAnimation />
+      </main>
+    );
   }
 }

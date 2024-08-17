@@ -364,6 +364,7 @@ export default function Home() {
           commands={commands}
           welcomeMessage={welcomeMessageRef.current}
           theme={"material-ocean"}
+          errorMessage={"Command not found"}
         />
       </main>
     );

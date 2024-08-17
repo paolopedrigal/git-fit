@@ -13,14 +13,14 @@ const witHelp = (
       <strong>{"commit".padEnd(12, " ")}</strong>Record workout
     </pre>
     <pre style={{ marginLeft: "20px" }}>
-      <strong>{"log".padEnd(12, " ")}</strong>Show commit logs
+      <strong>{"log".padEnd(12, " ")}</strong>Show workout entries
     </pre>
     <pre style={{ marginLeft: "20px" }}>
       <strong>{"status".padEnd(12, " ")}</strong>Check if working out
     </pre>
     <pre style={{ marginLeft: "20px" }}>
-      <strong>{"reset".padEnd(12, " ")}</strong>Forget current workout or delete
-      workout
+      <strong>{"reset".padEnd(12, " ")}</strong>Forget current workout {"("}or
+      delete workout with <strong>--delete</strong> option{")"}
     </pre>
     <br />
     <span>OPTIONS</span>
@@ -30,8 +30,8 @@ const witHelp = (
     </span>
     <br />
     <pre style={{ marginLeft: "20px" }}>
-      <strong>{"-m <message>".padEnd(26, " ")}</strong>End and commit the
-      workout with a commit message
+      <strong>{"-m <message>".padEnd(26, " ")}</strong>
+      {"(Required) "}End and commit the workout with a commit message
     </pre>
     <br />
     <span>
@@ -68,11 +68,10 @@ const witHelp = (
       <strong>Note:</strong>
     </span>
     <br />
-    <span style={{ marginLeft: "20px" }}>
+    <pre style={{ marginLeft: "20px" }}>
       - The <strong>--week</strong> option can't be combined with the{" "}
       <strong>--month-year</strong> option.
-    </span>
-    <br />
+    </pre>
     <br />
     <span>
       <strong>Examples:</strong>

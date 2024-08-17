@@ -18,6 +18,8 @@ const witLogMonth = (
   startMonthDate: string,
   endMonthDate: string
 ) => {
+  if (logs == undefined) return <span>Unable to get logs</span>;
+
   groupLogsByDate(logs);
 
   const today = new Date();

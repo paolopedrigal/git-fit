@@ -3,7 +3,7 @@ import { formatGitDate, formatGitTime } from "@/lib/utils";
 
 // prettier-ignore
 const witLog = (logs: Log[], username: string = "") => {
-  if (logs.length == 0) {
+  if (logs == undefined || logs.length == 0) {
     return <span>No logs found</span>;
   }
 

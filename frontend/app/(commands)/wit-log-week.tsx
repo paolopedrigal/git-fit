@@ -15,6 +15,8 @@ enum DayOfWeek {
 
 // prettier-ignore
 const witLogWeek = (logs: Log[], startDate: string, endDate: string) => {
+  if (logs == undefined) return <></>;
+
   groupLogsByDate(logs)
   const today = (new Date()).getDay(); // 0 (Sunday) to 6 (Saturday)
   const daysOfWeek: Box[] = new Array(7).fill(0).map((_, index) => index >= today ? "⬜" : "⬛");

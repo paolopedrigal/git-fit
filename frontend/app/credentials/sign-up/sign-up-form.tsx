@@ -243,6 +243,7 @@ export function SignUpForm() {
           <Link
             href="https://github.com/paolopedrigal"
             style={{ textDecoration: "underline" }}
+            target="_blank"
           >
             paolopedrigal
           </Link>

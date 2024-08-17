@@ -48,7 +48,6 @@ const handler = NextAuth({
   },
   callbacks: {
     async signIn({ user }) {
-      console.log(user);
       if (user.token_type == "error") {
         throw new Error("Custom Sign In Error");
       }

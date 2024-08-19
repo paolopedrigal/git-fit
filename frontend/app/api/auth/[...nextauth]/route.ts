@@ -3,7 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import { User } from "next-auth";
 
 const handler = NextAuth({
-  secret: process.env.AUTH_SECRET,
+  secret: process.env.NEXAUTH_SECRET,
   providers: [
     Credentials({
       // The name to display on the sign in form (e.g. "Sign in with...")

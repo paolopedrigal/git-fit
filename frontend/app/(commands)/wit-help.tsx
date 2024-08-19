@@ -52,11 +52,11 @@ const witHelp = (
       line
     </pre>
     <pre style={{ marginLeft: "20px" }}>
-      <strong>{"--week".padEnd(26, " ")}</strong>Visualizes logs for the current
+      <strong>{"--week".padEnd(26, " ")}</strong>Graphs logs for the current
       week
     </pre>
     <pre style={{ marginLeft: "20px" }}>
-      <strong>{"--month".padEnd(26, " ")}</strong>Visualizes logs for the month.
+      <strong>{"--month".padEnd(26, " ")}</strong>Graphs logs for the month.
       Defaults to current month
     </pre>
     <pre style={{ marginLeft: "20px" }}>

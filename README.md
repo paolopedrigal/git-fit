@@ -5,7 +5,7 @@
 ![workout-cli-screenshot](https://github.com/user-attachments/assets/ef1b6edd-ad08-439d-b675-345218ced844)
 
 ## Description
-A web-based command line interface for tracking workout sessions.
+A web-based shell command line interface for tracking workout sessions.
 
 
 ### Technology used

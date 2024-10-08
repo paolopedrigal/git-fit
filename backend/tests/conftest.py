@@ -4,7 +4,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
-import pytest
+import pytest # type: ignore
 
 from ..database import Base
 from ..main import app, get_db as get_db_main

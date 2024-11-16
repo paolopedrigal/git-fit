@@ -1,4 +1,4 @@
-# Workout Command Line Interface
+# Workout Tracker Command Line Interface
 
 ![License Static Badge](https://img.shields.io/badge/license-MIT-orange)
 

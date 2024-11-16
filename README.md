@@ -20,7 +20,7 @@ As a gym-goer and programmer, I wanted to create a workout entry logger specific
 
 ### In progress
 
-- Testing: `TestClient` for FastAPI and jest for JS testing
+- Testing: Jest for JS testing
 - Containerization: Update Dockerfile for _backend_ and add Dockerfile for _frontend_. Need to add docker-compose file as well.
 - DevOps: CI/CD pipeline with GitHub Actions. Deployment on AWS or Vercel for frontend and RDS + EC2 for backend
 

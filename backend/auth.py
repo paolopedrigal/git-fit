@@ -10,7 +10,7 @@ from jwt.exceptions import InvalidTokenError
 from uuid import UUID
 
 from backend.database import SessionLocal
-from . import TOKEN_TYPE, dotenv, crud, schemas
+from backend import TOKEN_TYPE, config, crud, schemas
 
 # Configure router for auth endpoints
 router = APIRouter(
@@ -19,8 +19,8 @@ router = APIRouter(
 )
 
 # Check for missing keys from .env and handle them
-SECRET_KEY = dotenv.config.get("SECRET_KEY")
-ALGORITHM = dotenv.config.get("ALGORITHM")
+SECRET_KEY = config.config.get("SECRET_KEY")
+ALGORITHM = config.config.get("ALGORITHM")
 
 if not SECRET_KEY or not ALGORITHM:
     raise KeyError("Missing one or more environment variables: SECRET_KEY, ALGORITHM")

@@ -6,9 +6,9 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 import pytest # type: ignore
 
-from ..database import Base
-from ..main import app, get_db as get_db_main
-from ..auth import get_db as get_db_auth
+from backend.database import Base
+from backend.main import app, get_db as get_db_main
+from backend.auth import get_db as get_db_auth
 
 # Create database session (to have independent testing)
 TEST_DB_URL = "sqlite:///./test.db"

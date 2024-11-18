@@ -1,7 +1,7 @@
-from .conftest import client
-from . import test_auth
-from .inputs import VALID_USER_1, VALID_LOG_1, START_DATE, END_DATE
-from .utils import parse_time_string, get_year, get_month
+from backend.tests.conftest import client
+from backend.tests import test_auth
+from backend.tests.inputs import VALID_USER_1, VALID_LOG_1, START_DATE, END_DATE
+from backend.tests.utils import parse_time_string, get_year, get_month
 
 def test_home_without_login(test_db):
     response = client.get("/", headers={"Content-Type": "application/json"})

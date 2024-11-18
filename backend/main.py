@@ -4,9 +4,9 @@ from fastapi import FastAPI, Depends, Query, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from datetime import date
-from . import models, schemas, crud, auth
-from .database import SessionLocal, engine
-from .dotenv import config
+from backend import models, schemas, crud, auth
+from backend.database import SessionLocal, engine
+from backend.config import config
 
 # Create tables in .models
 models.Base.metadata.create_all(bind=engine)

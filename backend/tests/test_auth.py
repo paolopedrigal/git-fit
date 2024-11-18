@@ -1,5 +1,5 @@
-from .conftest import client
-from .inputs import VALID_USER_1, INVALID_USER_1
+from backend.tests.conftest import client
+from backend.tests.inputs import VALID_USER_1, INVALID_USER_1
 
 def test_create_user(test_db):
     # testing create user

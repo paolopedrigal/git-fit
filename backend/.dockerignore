@@ -4,7 +4,9 @@ venv/
 env/
 
 # Environment files
-.env
+*.env
+*.env.local
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -13,3 +15,25 @@ __pycache__/
 
 # Local databases
 *.db
+
+# Logs and temporary files
+*.log
+
+# Git files and folders
+.git
+.gitignore
+
+# Docker-related files
+Dockerfile
+.dockerignore
+
+# IDE/editor files and workspace settings
+.idea/
+.vscode/
+*.swp
+
+# macOS-specific files
+.DS_Store
+
+# Windows-specific files
+Thumbs.db

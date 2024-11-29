@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from datetime import date
 from backend import models, schemas, crud, auth
 from backend.database import SessionLocal, engine
-from backend.config import config
+import os
 
 # Create tables in .models
 models.Base.metadata.create_all(bind=engine)
@@ -18,7 +18,7 @@ app = FastAPI()
 app.include_router(auth.router)
 
 # CORS handling
-origins = config.get("CORS_ORIGINS").split(",")
+origins = os.environ.get("CORS_ORIGINS").split(",")
 
 app.add_middleware(
     CORSMiddleware,

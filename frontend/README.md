@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Next.js frontend for Workout Command Line Interface
 
-## Getting Started
+## File structure (Non-exhaustive)
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+.
+├── frontend
+│   ├── app                # source code of app
+│   │   ├── (commands)     # "wit" commands
+│   │   ├── api            # designated Next.js api folder
+│   │   ├── credentials    # pages/layouts for credentials
+│   ├── components         # react components folder
+│   │   ├── ui             # shadcn ui components
+│   ├── lib                # contains utilities
+│   ├── public             # designated public folder
+│   ├── types              # typing folder
+│   ├── .dockerignore      # ignore file for Docker image
+│   ├── .env.example       # template for .env file
+│   ├── .gitignore         # ignore file for GitHub repo
+│   ├── Dockerfile.dev     # to build Docker image
+│   ├── package-lock.json  # dependencies
+│   ├── package.json       # dependencies
+│   └── README.md          # this file
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## How to generate .env file from .env.example file
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Create a file called `.env` that has the same environment variables from the `.env.example` file. In Linux/Unix, you can use the following command:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+   ```
+   $ cp ./.env.example ./.env
+   ```
 
-## Learn More
+2. For the `NEXTAUTH_SECRET` variable, generate it in Linux/Unix using the following command:
 
-To learn more about Next.js, take a look at the following resources:
+   ```
+   openssl rand -hex 32
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   - **Note**: Make sure the `NEXTAUTH_SECRET` variable is the same as the `SECRET_KEY` variable in the `.env` file at `../backend`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+3. For the `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` and `RECAPTCHA_SECRET_KEY`, sign up for an API key pair [here](https://developers.google.com/recaptcha/intro). Make sure you are using reCAPTCHA v3.

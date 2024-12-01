@@ -5,8 +5,8 @@
 ![workout-cli-screenshot](https://github.com/user-attachments/assets/ef1b6edd-ad08-439d-b675-345218ced844)
 
 ## Description
-A web-based shell command line interface for tracking workout sessions.
 
+A web-based shell command line interface for tracking workout sessions.
 
 ### Technology used
 
@@ -21,14 +21,38 @@ As a gym-goer and programmer, I wanted to create a workout entry logger specific
 ### In progress
 
 - Testing: Jest for JS testing
-- Containerization: Update Dockerfile for _backend_ and add Dockerfile for _frontend_. Need to add docker-compose file as well.
-- DevOps: CI/CD pipeline with GitHub Actions. Deployment on AWS or Vercel for frontend and RDS + EC2 for backend
+- Deployment: Vercel for Next.js, Render for FastAPI, and RDS for postgres
+- Documentation: Update README to see how to generate environment variables for frontend and backend
+- Backend: Refactor SQLAlchemy to use SQLModel (better integrates to FastAPI, as it is built on top of SQLAlchemy)
 
-## `wit` interface
+## Running the application for development
+
+### Prerequisites
+
+- Install [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/).
+- Create the `.env` files as instructed in the `backend` and `frontend` directories
+
+### Steps
+
+1. Start the containers:
+
+   ```
+   docker-compose up --build
+   ```
+
+2. Access the applications locally:
+   - Frontend: [http://localhost:3000](http://localhost:3000)
+   - Backend: [http://localhost:8000/docs](http://localhost:8000/docs)
+3. Stop the containers:
+   ```
+   docker-compose down
+   ```
+
+## `wit` CLI
 
 `wit`, inspired by `git` version control, helps keep track of your workout/exercise entries in a command line interface. In other words, it is the _git_ for _workouts_, hence the name.
 
-### Commands
+### Command Reference
 
 `wit add`
 

@@ -22,7 +22,6 @@ As a gym-goer and programmer, I wanted to create a workout entry logger specific
 
 - Testing: Jest for JS testing
 - Deployment: Vercel for Next.js, Render for FastAPI, and RDS for postgres
-- Documentation: Update README to see how to generate environment variables for frontend and backend
 - Backend: Refactor SQLAlchemy to use SQLModel (better integrates to FastAPI, as it is built on top of SQLAlchemy)
 
 ## Running the application for development

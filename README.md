@@ -20,7 +20,6 @@ As a gym-goer and programmer, I wanted to create a workout entry logger specific
 
 ### In progress
 
-- Testing: Dockerfile for testing (?), Jest for JS testing
 - Deployment: Vercel for Next.js, Render for FastAPI, and RDS for postgres
 - Backend: Refactor SQLAlchemy to use SQLModel (better integrates to FastAPI, as it is built on top of SQLAlchemy)
 
@@ -43,18 +42,23 @@ As a gym-goer and programmer, I wanted to create a workout entry logger specific
    - Frontend: [http://localhost:3000](http://localhost:3000)
    - Backend: [http://localhost:8000/docs](http://localhost:8000/docs)
 3. Testing the application:
-   - Backend:
-     1. Get the docker container ID of the backend container:
-        ```
-        docker ps
-        ```
-     2. Enter in the running container:
-        ```
-        docker exec -it <backend_container_id> /bin/bash
-        ```
-     3. Run the unit tests within `./backend/tests/`:
+   1. Add/modify tests at `./backend/tests/` or `./frontend/tests/`
+   2. Get the docker container ID of the running backend or frontend container:
+      ```
+      docker ps
+      ```
+   3. Enter in the running backend or frontend container id:
+      ```
+      docker exec -it <be_or_fe_container_id> /bin/bash
+      ```
+   4. Run the unit tests within the bash shell:
+      - Backend:
         ```
         pytest ./tests/
+        ```
+      - Frontend:
+        ```
+        npm test
         ```
 4. Stop the containers when finished:
    ```

@@ -13,7 +13,7 @@ enum DayOfWeek {
   Sat,
 }
 
-const witLogMonth = (
+const fitLogMonth = (
   logs: Log[],
   startMonthDate: string,
   endMonthDate: string
@@ -118,4 +118,4 @@ const witLogMonth = (
   );
 };
 
-export default witLogMonth;
+export default fitLogMonth;

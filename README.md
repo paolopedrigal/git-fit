@@ -1,8 +1,6 @@
-# Workout Tracker Command Line Interface
+# git-fit: Workout Tracker Command Line Interface
 
 ![License Static Badge](https://img.shields.io/badge/license-MIT-orange)
-
-![workout-cli-screenshot](https://github.com/user-attachments/assets/ef1b6edd-ad08-439d-b675-345218ced844)
 
 ## Description
 
@@ -20,8 +18,14 @@ As a gym-goer and programmer, I wanted to create a workout entry logger specific
 
 ### In progress
 
-- Deployment: Vercel for Next.js, Render for FastAPI, and RDS for postgres
-- Backend: Refactor SQLAlchemy to use SQLModel (better integrates to FastAPI, as it is built on top of SQLAlchemy)
+- Deployment: Vercel for Next.js, AWS EC2 for FastAPI
+- CI/CD: Set up GitHub Actions
+- Frontend:
+  - Create command for outputting graph of year of logs
+- Backend:
+  - Refactor SQLAlchemy to use SQLModel (better integrates to FastAPI, as it is built on top of SQLAlchemy)
+  - Delete users after a year of inactiviy
+  - Limit number of logs a user can add per day
 
 ## Running the application for development
 
@@ -65,54 +69,54 @@ As a gym-goer and programmer, I wanted to create a workout entry logger specific
    docker-compose down
    ```
 
-## `wit` CLI
+## `fit` CLI
 
-`wit`, inspired by `git` version control, helps keep track of your workout/exercise entries in a command line interface. In other words, it is the _git_ for _workouts_, hence the name.
+`fit`, inspired by `git` version control, helps keep track of your workout/exercise entries in a command line interface. In other words, it is the _git_ for _workouts_, hence the name.
 
 ### Command Reference
 
-`wit add`
+`fit add`
 
 - Start a workout session.
 
-`wit commit -m <message>`
+`fit commit -m <message>`
 
 - End and record workout session with message that describes the session.
 
-`wit status`
+`fit status`
 
 - Displays start time of workout session, if workout in progress.
 
-`wit reset`
+`fit reset`
 
 - Forgets current workout session, if workout started.
 
-`wit reset --delete <YYYY-MM-DD>`
+`fit reset --delete <YYYY-MM-DD>`
 
 - Deletes all the workout commits on the specified day at **YYYY-MM-DD**
 
-`wit log`
+`fit log`
 
 - Show commits of workout entries
 - Include the `--year-month <YYYY-MM>` option to display logs of a specified month
 
-`wit log --oneline`
+`fit log --oneline`
 
 - Shows commits of workout entries in compacted format
 - Add the `--year-month <YYYY-MM>` option to display logs of a specified month
 
-`wit log --week`
+`fit log --week`
 
 - Displays a graph of commits of workout entries of current calendar week
 
-`wit log --month`
+`fit log --month`
 
 - Displays a graph of commits of workout entries of current calendar month
 - Add the `--year-month <YYYY-MM>` option to display logs of a specified month
 
-`wit --help`
+`fit --help`
 
-- Show detailed information about `wit`
+- Show detailed information about `fit`
 
 ## License
 

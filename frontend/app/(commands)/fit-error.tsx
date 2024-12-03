@@ -1,4 +1,4 @@
-const witError = (
+const fitError = (
   <span>
     <span>
       Invalid command or options. Use the following usage guidelines:
@@ -6,31 +6,31 @@ const witError = (
     </span>
     <br />
     <pre style={{ marginLeft: "20px" }}>
-      wit add
+      fit add
       <br />
     </pre>
     <pre style={{ marginLeft: "20px" }}>
-      wit commit -m {"<"}message{">"}
+      fit commit -m {"<"}message{">"}
       <br />
     </pre>
     <pre style={{ marginLeft: "20px" }}>
-      wit log {"["}--oneline | --week | --month | --year-month {"<"}YYYY-MM
+      fit log {"["}--oneline | --week | --month | --year-month {"<"}YYYY-MM
       {">]"}
       <br />
     </pre>
     <pre style={{ marginLeft: "20px" }}>
-      wit status
+      fit status
       <br />
     </pre>
     <pre style={{ marginLeft: "20px" }}>
-      wit reset {"["}--delete {"<"}YYYY-MM-DD{">]"}
+      fit reset {"["}--delete {"<"}YYYY-MM-DD{">]"}
       <br />
     </pre>
     <br />
     <span>
-      Enter <strong>wit --help</strong> for more information.
+      Enter <strong>fit --help</strong> for more information.
     </span>
   </span>
 );
 
-export default witError;
+export default fitError;

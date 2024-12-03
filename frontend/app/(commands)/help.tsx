@@ -14,7 +14,7 @@ const help = (
     <br />
     <span>COMMANDS:</span>
     <pre style={{ marginLeft: "20px" }}>
-      <strong style={{ color: "gold" }}>{"wit <command> [<args>]"}</strong>
+      <strong style={{ color: "gold" }}>{"fit <command> [<args>]"}</strong>
     </pre>
     <pre style={{ marginLeft: "50px" }}>
       A version control-like interface for managing your workout entries.
@@ -33,7 +33,7 @@ const help = (
     </pre>
     <br />
     <pre style={{ marginLeft: "50px" }}>
-      Use {'"wit --help"'} to show detailed information for wit commands.
+      Use {'"fit --help"'} to show detailed information for fit commands.
     </pre>
     <br />
     <pre style={{ marginLeft: "20px" }}>

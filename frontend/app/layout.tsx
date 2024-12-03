@@ -8,7 +8,7 @@ import TerminalProvider from "@/components/terminal-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Workout CLI",
+  title: "Git Fit",
   description: "Workout Tracker for Programmers",
 };
 

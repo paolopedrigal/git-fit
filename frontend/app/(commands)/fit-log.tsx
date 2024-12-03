@@ -2,7 +2,7 @@ import { Log } from "@/types/Log";
 import { formatGitDate, formatGitTime } from "@/lib/utils";
 
 // prettier-ignore
-const witLog = (logs: Log[], username: string = "") => {
+const fitLog = (logs: Log[], username: string = "") => {
   if (logs == undefined || logs.length == 0) {
     return <span>No logs found</span>;
   }
@@ -31,4 +31,4 @@ const witLog = (logs: Log[], username: string = "") => {
   );
 };
 
-export default witLog;
+export default fitLog;

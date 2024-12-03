@@ -14,7 +14,7 @@ enum DayOfWeek {
 }
 
 // prettier-ignore
-const witLogWeek = (logs: Log[], startDate: string, endDate: string) => {
+const fitLogWeek = (logs: Log[], startDate: string, endDate: string) => {
   if (logs == undefined) return <></>;
 
   groupLogsByDate(logs)
@@ -36,4 +36,4 @@ const witLogWeek = (logs: Log[], startDate: string, endDate: string) => {
   );
 };
 
-export default witLogWeek;
+export default fitLogWeek;

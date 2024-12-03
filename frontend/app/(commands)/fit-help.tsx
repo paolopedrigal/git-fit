@@ -1,7 +1,7 @@
-const witHelp = (
+const fitHelp = (
   <>
     <pre>
-      usage: wit {"[<"}command{">]"} {"[<"}args{">]"}
+      usage: fit {"[<"}command{">]"} {"[<"}args{">]"}
     </pre>
     <br />
     <span>COMMANDS</span>
@@ -77,24 +77,24 @@ const witHelp = (
       <strong>Examples:</strong>
     </span>
     <br />
-    <span style={{ marginLeft: "20px" }}>wit add</span>
+    <span style={{ marginLeft: "20px" }}>fit add</span>
     <br />
-    <span style={{ marginLeft: "20px" }}>wit status</span>
+    <span style={{ marginLeft: "20px" }}>fit status</span>
     <br />
     <pre style={{ marginLeft: "20px" }}>
-      wit commit -m "push: chest, triceps, shoulders"
+      fit commit -m "push: chest, triceps, shoulders"
     </pre>
-    <span style={{ marginLeft: "20px" }}>wit log --week</span>
+    <span style={{ marginLeft: "20px" }}>fit log --week</span>
     <br />
-    <span style={{ marginLeft: "20px" }}>wit log --month</span>
+    <span style={{ marginLeft: "20px" }}>fit log --month</span>
     <br />
-    <pre style={{ marginLeft: "20px" }}>wit log --year-month 2024-07</pre>
+    <pre style={{ marginLeft: "20px" }}>fit log --year-month 2024-07</pre>
     <pre style={{ marginLeft: "20px" }}>
-      wit log --oneline --year-month 2023-03
+      fit log --oneline --year-month 2023-03
     </pre>
-    <pre style={{ marginLeft: "20px" }}>wit reset --delete 2022-09-22</pre>
-    <span style={{ marginLeft: "20px" }}>wit reset</span>
+    <pre style={{ marginLeft: "20px" }}>fit reset --delete 2022-09-22</pre>
+    <span style={{ marginLeft: "20px" }}>fit reset</span>
   </>
 );
 
-export default witHelp;
+export default fitHelp;

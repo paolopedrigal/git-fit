@@ -1,6 +1,6 @@
 import { getTimeOfDay } from "@/lib/utils";
 
-const witStatus = (startWorkoutTime: number | undefined) => {
+const fitStatus = (startWorkoutTime: number | undefined) => {
   if (startWorkoutTime == undefined) return <span>No workout in progress</span>;
   else
     return (
@@ -15,4 +15,4 @@ const witStatus = (startWorkoutTime: number | undefined) => {
     );
 };
 
-export default witStatus;
+export default fitStatus;

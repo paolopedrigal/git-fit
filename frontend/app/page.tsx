@@ -16,15 +16,15 @@ import {
 } from "@/lib/utils";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import help from "./(commands)/help";
-import witLog from "./(commands)/wit-log";
-import witLogOneline from "./(commands)/wit-log-oneline";
-import witLogWeek from "./(commands)/wit-log-week";
+import fitLog from "./(commands)/fit-log";
+import fitLogOneline from "./(commands)/fit-log-oneline";
+import fitLogWeek from "./(commands)/fit-log-week";
 import welcome from "./(commands)/welcome";
 import { CommandMap } from "@/types/CommandMap";
-import witLogMonth from "./(commands)/wit-log-month";
-import witHelp from "./(commands)/wit-help";
-import witError from "./(commands)/wit-error";
-import witStatus from "./(commands)/wit-status";
+import fitLogMonth from "./(commands)/fit-log-month";
+import fitHelp from "./(commands)/fit-help";
+import fitError from "./(commands)/fit-error";
+import fitStatus from "./(commands)/fit-status";
 import { Log, LogBase } from "@/types/Log";
 import { redirect } from "next/navigation";
 import { Dialog } from "@/components/dialog";
@@ -164,7 +164,7 @@ export default function Home() {
         setWelcomeMessage(
           <div>
             {welcome}
-            {witLogWeek(logs, startWeekDate, endWeekDate)}
+            {fitLogWeek(logs, startWeekDate, endWeekDate)}
             <br />
             <br />
           </div>
@@ -182,16 +182,16 @@ export default function Home() {
     const commands: CommandMap = {
       help: help,
 
-      wit: async (args) => {
+      fit: async (args) => {
         const a = splitIgnoringQuotes(args);
-        /* wit add */
+        /* fit add */
         if (a.length == 1 && a[0] == "add") {
           if (startWorkoutTime != undefined)
             return <span>Workout already in progress</span>;
           setStartWorkoutTime(new Date().getTime());
           return <span>Workout started</span>;
         } else if (
-          /* wit commit -m <message> */
+          /* fit commit -m <message> */
           a[0] == "commit" &&
           a.length == 3 &&
           a[1] == "-m" &&
@@ -212,13 +212,13 @@ export default function Home() {
             return <span>Unable to record workout</span>;
           }
         } else if (
-          /* wit status */
+          /* fit status */
           a.length == 1 &&
           a[0] == "status"
         ) {
-          return witStatus(startWorkoutTime);
+          return fitStatus(startWorkoutTime);
         } else if (
-          /* wit reset */
+          /* fit reset */
           a.length == 1 &&
           a[0] == "reset"
         ) {
@@ -227,7 +227,7 @@ export default function Home() {
           setStartWorkoutTime(undefined);
           return <span>Forgetting workout</span>;
         } else if (
-          /* wit reset --delete <YYYY-MM-DD> */
+          /* fit reset --delete <YYYY-MM-DD> */
           a.length == 3 &&
           a[0] == "reset" &&
           a[1] == "--delete" &&
@@ -240,35 +240,35 @@ export default function Home() {
           if (logs.length == 0) return <span>No workout logs to delete</span>;
           return <span>Deleting workout log(s)</span>;
         } else if (a.length == 1 && a[0] == "log") {
-          /* wit log */
+          /* fit log */
           const logs = await logsCallback(session.user.access_token);
-          return witLog(logs, session.user.username);
+          return fitLog(logs, session.user.username);
         } else if (
-          /* wit log --oneline | --week | --month */
+          /* fit log --oneline | --week | --month */
           a.length == 2 &&
           a[0] == "log" &&
           (a[1] == "--oneline" || a[1] == "--week" || a[1] == "--month")
         ) {
           if (a[1] == "--oneline") {
             const logs = await logsCallback(session.user.access_token);
-            return witLogOneline(logs);
+            return fitLogOneline(logs);
           } else if (a[1] == "--week") {
             const logs = await logsCallbackRange(
               session.user.access_token,
               startWeekDate,
               endWeekDate
             );
-            return witLogWeek(logs, startWeekDate, endWeekDate);
+            return fitLogWeek(logs, startWeekDate, endWeekDate);
           } else {
             const logs = await logsCallbackRange(
               session.user.access_token,
               startMonthDate,
               endMonthDate
             );
-            return witLogMonth(logs, startMonthDate, endMonthDate);
+            return fitLogMonth(logs, startMonthDate, endMonthDate);
           }
         } else if (
-          /* wit log --year-month YYYY-MM */
+          /* fit log --year-month YYYY-MM */
           a.length == 3 &&
           a[0] == "log" &&
           a[1] == "--year-month" &&
@@ -280,9 +280,9 @@ export default function Home() {
             startDate,
             endDate
           );
-          return witLog(logs);
+          return fitLog(logs);
         } else if (
-          /* wit log (--oneline | --month) --year-month YYYY-MM */
+          /* fit log (--oneline | --month) --year-month YYYY-MM */
           a.length == 4 &&
           a[0] == "log" &&
           (a[1] == "--oneline" || a[1] == "--month") &&
@@ -296,12 +296,12 @@ export default function Home() {
             endDate
           );
           if (a[1] == "--oneline") {
-            return witLogOneline(logs);
+            return fitLogOneline(logs);
           } else {
-            return witLogMonth(logs, startDate, endDate);
+            return fitLogMonth(logs, startDate, endDate);
           }
         } else if (
-          /* wit log --year-month YYYY-MM (--oneline | --month) */
+          /* fit log --year-month YYYY-MM (--oneline | --month) */
           a.length == 4 &&
           a[0] == "log" &&
           a[1] == "--year-month" &&
@@ -315,14 +315,14 @@ export default function Home() {
             endDate
           );
           if (a[3] == "--oneline") {
-            return witLogOneline(logs);
+            return fitLogOneline(logs);
           } else {
-            return witLogMonth(logs, startDate, endDate);
+            return fitLogMonth(logs, startDate, endDate);
           }
         } else if (a.length == 0 || (a.length == 1 && a[0] == "--help")) {
-          return witHelp;
+          return fitHelp;
         } else {
-          return witError;
+          return fitError;
         }
       },
 

@@ -1,6 +1,6 @@
 import { Log } from "@/types/Log";
 
-const witLogOneline = (logs: Log[]) => {
+const fitLogOneline = (logs: Log[]) => {
   if (logs == undefined) return <span>Unable to get logs</span>;
   else if (logs.length == 0) return <span>No logs found</span>;
 
@@ -21,4 +21,4 @@ const witLogOneline = (logs: Log[]) => {
   );
 };
 
-export default witLogOneline;
+export default fitLogOneline;

@@ -8,7 +8,6 @@ services:
       - "8000:8000" # Expose FastAPI
     depends_on:
       - db
-    env_file: ./backend/.env
     volumes:
       - ./backend:/backend
     networks:

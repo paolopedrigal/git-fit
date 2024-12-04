@@ -8,7 +8,7 @@ from pydantic import BaseModel
 import jwt
 from jwt.exceptions import InvalidTokenError
 from uuid import UUID
-import os
+from backend.config import SECRET_KEY, ALGORITHM
 
 from backend.database import SessionLocal
 from backend import TOKEN_TYPE, crud, schemas
@@ -18,13 +18,6 @@ router = APIRouter(
     prefix="/auth",
     tags=["auth"]
 )
-
-# Check for missing keys from .env and handle them
-SECRET_KEY = os.environ.get("SECRET_KEY")
-ALGORITHM = os.environ.get("ALGORITHM")
-
-if not SECRET_KEY or not ALGORITHM:
-    raise KeyError("Missing one or more environment variables: SECRET_KEY, ALGORITHM")
 
 ACCESS_TOKEN_EXPIRE_WEEKS = 1
 

@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from datetime import date
 from backend import models, schemas, crud, auth
 from backend.database import SessionLocal, engine
-import os
+from backend.config import CORS_ORIGINS
 
 # Create tables in .models
 models.Base.metadata.create_all(bind=engine)
@@ -17,12 +17,9 @@ app = FastAPI()
 # Include endpoint routes in auth
 app.include_router(auth.router)
 
-# CORS handling
-origins = os.environ.get("CORS_ORIGINS").split(",")
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"]

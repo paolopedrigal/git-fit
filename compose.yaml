@@ -27,6 +27,22 @@ services:
       - ./frontend:/frontend
     networks:
       - app-network
+    profiles:
+      - dev
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80" # Expose Nginx
+    depends_on:
+      - backend
+    volumes:
+      - ./nginx:/etc/nginx/conf.d:ro
+    networks:
+      - app-network
+    profiles:
+      - prod
 
   db:
     image: postgres:15

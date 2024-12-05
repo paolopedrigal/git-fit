@@ -11,9 +11,11 @@
 │   ├── crud.py            # SQLAlchemy query functions
 │   ├── database.py        # creates SQLAlchemy database
 │   ├── main.py            # main endpoints
-│   ├── models.py          # Pydantic model for type validation
+│   ├── models.py          # Pydantic models for type validation
 │   ├── schemas.py         # SQLAlchemy schema
-│   │
+│   └── aws
+│   │   ├── __init__.py    # "aws" subpackage
+│   │   ├── conftest.py    # connet to AWS Systems Manager
 │   └── tests
 │   │   ├── __init__.py    # "tests" subpackage
 │   │   ├── conftest.py    # fixtures file
@@ -21,7 +23,6 @@
 │   │   ├── test_auth.py   # unit tests for "/auth" endpoints
 │   │   ├── test_main.py   # unit tests for non-auth endpoints
 │   │   └── utils.py       # additional misc. functions
-│   │
 │   ├── .dockerignore      # ignore file for Docker image
 │   ├── .env.example       # template for .env file
 │   ├── .gitignore         # ignore file for GitHub repo

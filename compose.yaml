@@ -1,17 +1,33 @@
 services:
-  backend:
+  backend_prod:
     build:
       context: ./backend
       dockerfile: Dockerfile
     container_name: backend
     ports:
-      - "80:8000" # Expose FastAPI
+      - "8000:8000" # Map HTTP port to FastAPI 8000 port
+    volumes:
+      - ./backend:/backend
+    networks:
+      - app-network
+    profiles:
+      - prod
+
+  backend_dev: # creating a separate backend service only for dev for dev postgres db
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend
+    ports:
+      - "8000:8000" # Expose FastAPI
     depends_on:
       - db
     volumes:
       - ./backend:/backend
     networks:
       - app-network
+    profiles:
+      - dev
 
   frontend:
     build:
@@ -22,7 +38,7 @@ services:
       - "3000:3000" # Expose Next.js
     env_file: ./frontend/.env
     depends_on:
-      - backend
+      - backend_dev
     volumes:
       - ./frontend:/frontend
     networks:
@@ -35,10 +51,13 @@ services:
     container_name: postgres
     ports:
       - "5432:5432"
+    env_file: ./backend/.env # required attribute
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - app-network
+    profiles:
+      - dev
 
   nginx:
     image: nginx:latest
@@ -47,7 +66,7 @@ services:
       - "80:80" # Expose HTTP for Certbot and FastAPI
       - "443:443" # Expose HTTPS for secure traffic
     depends_on:
-      - backend
+      - backend_prod
     volumes:
       - ./nginx:/etc/nginx/conf.d:ro
       - ./data/certbot/conf:/etc/letsencrypt

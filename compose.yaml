@@ -12,6 +12,9 @@ services:
       - ./backend:/backend
     networks:
       - app-network
+    profiles:
+      - dev
+      - prod
 
   frontend:
     build:

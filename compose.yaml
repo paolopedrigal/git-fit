@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     container_name: backend
     ports:
-      - "8000:8000" # Expose FastAPI
+      - "80:8000" # Expose FastAPI
     depends_on:
       - db
     volumes:

@@ -12,9 +12,6 @@ services:
       - ./backend:/backend
     networks:
       - app-network
-    profiles:
-      - dev
-      - prod
 
   frontend:
     build:
@@ -43,8 +40,6 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - app-network
-    profiles:
-      - dev
 
   nginx:
     image: nginx:latest

@@ -19,14 +19,15 @@ As a gym-goer and programmer, I wanted to create a workout entry logger specific
 
 ### In progress
 
-- Deployment: Vercel for Next.js, AWS EC2 for FastAPI
-- CI/CD: Set up GitHub Actions
 - Frontend:
   - Create command for outputting graph of year of logs
+  - Fix hiding keyboard
 - Backend:
   - Refactor SQLAlchemy to use SQLModel (better integrates to FastAPI, as it is built on top of SQLAlchemy)
   - Delete users after a year of inactiviy
   - Limit number of logs a user can add per day
+- Cloud: Based on incoming traffic, put AWS EC2 instance in private subnet, configure NAT gateway, and set up a load balancer
+- CI/CD: Set up GitHub Actions
 
 ## Running the application for development
 

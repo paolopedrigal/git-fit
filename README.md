@@ -27,7 +27,7 @@ As a gym-goer and programmer, I wanted to create a workout entry logger specific
   - Refactor SQLAlchemy to use SQLModel (better integrates to FastAPI, as it is built on top of SQLAlchemy)
   - Delete users after a year of inactiviy
   - Limit number of logs a user can add per day
-- Cloud: Based on incoming traffic, put AWS EC2 instance in private subnet, configure NAT gateway, and set up a load balancer
+- Cloud: Based on incoming traffic, put AWS EC2 instance in private subnet, configure NAT gateway, and set up ALB load balancer
 - CI/CD: Set up GitHub Actions
 
 ## Running the application for development

@@ -21,7 +21,8 @@ As a gym-goer and programmer, I wanted to create a workout entry logger specific
 
 - Frontend:
   - Create command for outputting graph of year of logs
-  - Fix hiding keyboard
+  - Allow user to customize color theme for shell
+  - Fix hiding keyboard for mobile devices
 - Backend:
   - Refactor SQLAlchemy to use SQLModel (better integrates to FastAPI, as it is built on top of SQLAlchemy)
   - Delete users after a year of inactiviy

@@ -5,7 +5,8 @@ services:
       dockerfile: Dockerfile
     container_name: backend
     ports:
-      - "8000:8000" # Map HTTP port to FastAPI 8000 port
+      - "8000:8000"
+    restart: always
     volumes:
       - ./backend:/backend
     networks:
@@ -13,13 +14,13 @@ services:
     profiles:
       - prod
 
-  backend_dev: # creating a separate backend service only for dev for dev postgres db
+  backend_dev: # creating a separate backend service for dev profile for db service
     build:
       context: ./backend
       dockerfile: Dockerfile
     container_name: backend
     ports:
-      - "8000:8000" # Expose FastAPI
+      - "8000:8000"
     depends_on:
       - db
     volumes:
@@ -35,7 +36,7 @@ services:
       dockerfile: Dockerfile.dev
     container_name: frontend
     ports:
-      - "3000:3000" # Expose Next.js
+      - "3000:3000"
     env_file: ./frontend/.env
     depends_on:
       - backend_dev
@@ -51,44 +52,13 @@ services:
     container_name: postgres
     ports:
       - "5432:5432"
-    env_file: ./backend/.env # required attribute
+    env_file: ./backend/.env # required attribute (if not "environment" attribute)
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - app-network
     profiles:
       - dev
-
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    ports:
-      - "80:80" # Expose HTTP for Certbot and FastAPI
-      - "443:443" # Expose HTTPS for secure traffic
-    depends_on:
-      - backend_prod
-    volumes:
-      - ./nginx:/etc/nginx/conf.d:ro
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
-    networks:
-      - app-network
-    profiles:
-      - prod
-
-  certbot:
-    image: certbot/certbot
-    container_name: certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-    depends_on:
-      - nginx
-    volumes:
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
-    networks:
-      - app-network
-    profiles:
-      - prod
 
 networks:
   app-network:

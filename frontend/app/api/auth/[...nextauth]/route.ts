@@ -2,6 +2,8 @@ import NextAuth from "next-auth/next";
 import Credentials from "next-auth/providers/credentials";
 import { User } from "next-auth";
 
+export const dynamic = "force-dynamic";
+
 const handler = NextAuth({
   secret: process.env.NEXAUTH_SECRET,
   providers: [

@@ -69,7 +69,7 @@ const fitHelp = (
     </span>
     <br />
     <pre style={{ marginLeft: "20px" }}>
-      - The <strong>--week</strong> option can't be combined with the{" "}
+      - The <strong>--week</strong> option can&apos;t be combined with the{" "}
       <strong>--month-year</strong> option.
     </pre>
     <br />
@@ -82,7 +82,7 @@ const fitHelp = (
     <span style={{ marginLeft: "20px" }}>fit status</span>
     <br />
     <pre style={{ marginLeft: "20px" }}>
-      fit commit -m "push: chest, triceps, shoulders"
+      fit commit -m &quot;push: chest, triceps, shoulders&quot;
     </pre>
     <span style={{ marginLeft: "20px" }}>fit log --week</span>
     <br />

@@ -1,3 +1,5 @@
+"use client";
+
 import { SignInForm } from "@/app/credentials/sign-in/sign-in-form";
 import { Toaster } from "@/components/ui/toaster";
 import DumbbellAnimation from "@/components/dumbbell-animation";

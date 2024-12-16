@@ -1,11 +1,5 @@
 import React from "react";
-import dynamic from "next/dynamic";
-
-// Dynamically import ReactTerminal with SSR disabled
-const ReactTerminal = dynamic(
-  () => import("react-terminal").then((mod) => mod.ReactTerminal),
-  { ssr: false }
-);
+import { ReactTerminal } from "react-terminal";
 
 export default function ReactTerminalClient({ ...props }) {
   return <ReactTerminal {...props} />;

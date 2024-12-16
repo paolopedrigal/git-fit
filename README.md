@@ -11,7 +11,7 @@ A web-based shell command line interface for tracking workout sessions. Check ou
 - Frontend: Next.js, React, TypeScript, Tailwind, shadcn
 - Backend: Python, FastAPI, PostgreSQL, SQLAlchemy
 - Security: NextAuth.js, OAuth2, Google reCAPTCHA v3
-- Infrastructure and Deployment: Docker, AWS (EC2, SSM), Vercel, Supabase, Nginx
+- Infrastructure and Deployment: Docker, AWS (EC2, VPC, IAM, SSM), Vercel, Supabase, Nginx
 
 ### Motivation
 

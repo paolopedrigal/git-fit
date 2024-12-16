@@ -4,7 +4,7 @@
 
 ## Description
 
-A web-based shell command line interface for tracking workout sessions.
+A web-based shell command line interface for tracking workout sessions. Check out the site [here.](https://www.gitfit.me)
 
 ### Technology used
 
@@ -20,13 +20,15 @@ As a gym-goer and programmer, I wanted to create a workout entry logger specific
 ### In progress
 
 - Frontend:
+  - Add favicon for mobile devices
+  - Fix hiding keyboard for mobile devices
   - Create command for outputting graph of year of logs
   - Allow user to customize color theme for shell
-  - Fix hiding keyboard for mobile devices
 - Backend:
-  - Refactor SQLAlchemy to use SQLModel (better integrates to FastAPI, as it is built on top of SQLAlchemy)
+  - Set up SSL certificate for bastion host for https
   - Delete users after a year of inactiviy
   - Limit number of logs a user can add per day
+  - Refactor SQLAlchemy to use SQLModel (better integrates to FastAPI, as it is built on top of SQLAlchemy)
 - CI/CD: Set up GitHub Actions
 
 ## Running the application for development
